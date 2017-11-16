@@ -85,7 +85,7 @@
 		links.toString();
 		//17个人，第3个人杀死，求最后存活的两个人
 		var count=1;
-		var toKill="haha";
+		var toKill=links.find("head").next;
 		var oldKill="";
 		while(links.length>2){
 			if(toKill=="head"){
