@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		var links={
+			"head":{
+				"data":1,
+				"next":"head",
+				"index":0
+			},
+			"current":"head",
+			"currentIndex":0,
+			"length":0,
+			after:function(obj){ //{"name":"first","data":"2"}
+				this[this.current].next=obj.name;
+				this.current=obj.name;
+				this.currentIndex++;
+				this[obj.name]={
+					"data":obj.data,
+					"next":"head",
+					"index":this.currentIndex
+				};
+				this[obj.name].index=this.currentIndex
+				this.length++;
+			},
+			toString:function(){
+				var allIndex=[];
+				for(var i in this){
+					if(this[i].index!=undefined){
+						allIndex.push(this[i].index);
+					}	
+				}
+				allIndex.sort(function(a,b){
+					return a-b;
+				});
+				for(var j=0;j<allIndex.length;j++){
+					for(var k in this){
+						if(this[k].index==allIndex[j]&&k!="head"){
+							console.log(k,this[k]);
+							break;
+						}
+					}
+				}
+			},
+			find:function(str){
+				for(var i in this){
+					if(i==str){
+						return this[i];
+					}
+				}
+				return false;
+			},
+			delete:function(str){
+				if(str!="head"){
+					if(this.find(str)){
+						for(var m in this){
+							if(this[m].next==str){
+								if(this[str].next!="head"){
+									this[m].next=this[str].next;
+								}else{
+									this[m].next="head";
+								}
+								delete this[str];
+								this.length--;
+								return;
+							}	
+						}
+					}
+				}
+			}
+		}
+
+		var mockData=[["haha","4"],["hanmha","3"],["havbha","6"],["hxcaha","8"],["hzxaha","8"],["haklha","9"],["hakl12ha","3"],["hahhgjka","9"],["hfghaha","3"],["hahdfsa","0"],["haasha","3"],["iop","5"],["yui","3"],["tyu","3"],["ret","3"],["gfd","3"],["asd","3"],["as12d","3"],["as34d","3"],["as56d","3"]]
+		for(var i=0;i<mockData.length;i++){
+			var thisObj={
+				"name":mockData[i][0],
+				"data":mockData[i][1]
+			}
+			links.after(thisObj);
+		}
+		links.toString();
+		//17个人，第3个人杀死，求最后存活的两个人
+		var count=1;
+		var toKill="haha";
+		var oldKill="";
+		while(links.length>2){
+			if(toKill=="head"){
+				toKill=links[toKill].next;
+			}
+			oldKill=toKill;
+			toKill=links[toKill].next;
+			if(count%3==0){
+				console.log("准备删除"+oldKill);
+				links.delete(oldKill);
+				console.log("成功删除");
+			}
+			count++;
+		}
+		links.toString();
+	</script>
+</body>
+</html>
